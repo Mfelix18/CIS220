@@ -1,0 +1,140 @@
+//MIGUEL Angel Felix Pacheco
+//Chpt7 PA
+class BSTNode {
+    int key;
+    BSTNode left, right;
+
+    public BSTNode(int key) {
+        this.key = key;
+        this.left = this.right = null;
+    }
+}
+
+class BST {
+    private BSTNode root;
+
+    public BST() {
+        root = null;
+    }
+
+    public BSTNode getRoot() {
+        return root;
+    }
+
+    // Recursive search implementation
+    public BSTNode searchRecursive(BSTNode node, int key) {
+        if (node == null || node.key == key) {
+            return node;
+        }
+        if (key < node.key) {
+            return searchRecursive(node.left, key);
+        } else {
+            return searchRecursive(node.right, key);
+        }
+    }
+
+    // Iterative search implementation
+    public BSTNode search(int key) {
+        BSTNode current = root;
+        while (current != null && current.key != key) {
+            if (key < current.key) {
+                current = current.left;
+            } else {
+                current = current.right;
+            }
+        }
+        return current;
+    }
+
+    public boolean contains(int key) {
+        return search(key) != null;
+    }
+
+    public boolean insertKey(int key) {
+        if (contains(key)) {
+            return false;
+        }
+        BSTNode newNode = new BSTNode(key);
+        insertNode(newNode);
+        return true;
+    }
+
+    // Iterative insert implementation
+    private void insertNode(BSTNode node) {
+        if (root == null) {
+            root = node;
+            return;
+        }
+
+        BSTNode parent = null;
+        BSTNode current = root;
+        while (current != null) {
+            parent = current;
+            if (node.key < current.key) {
+                current = current.left;
+            } else {
+                current = current.right;
+            }
+        }
+
+        if (node.key < parent.key) {
+            parent.left = node;
+        } else {
+            parent.right = node;
+        }
+    }
+
+    // Recursive insert implementation
+    private void insertRecursive(BSTNode parent, BSTNode nodeToInsert) {
+        if (nodeToInsert.key < parent.key) {
+            if (parent.left == null) {
+                parent.left = nodeToInsert;
+            } else {
+                insertRecursive(parent.left, nodeToInsert);
+            }
+        } else {
+            if (parent.right == null) {
+                parent.right = nodeToInsert;
+            } else {
+                insertRecursive(parent.right, nodeToInsert);
+            }
+        }
+    }
+
+    // Print in reverse order (right -> root -> left)
+    public void printInReverseOrder(BSTNode node) {
+        if (node == null) return;
+        printInReverseOrder(node.right);
+        System.out.print(node.key + " ");
+        printInReverseOrder(node.left);
+    }
+
+    public static void main(String[] args) {
+        BST tree = new BST();
+        int[] keys = {35, 41, 13, 57, 3, 83, 88, 51, 38, 20, 11, 22, 27, 21, 48, 8};
+
+        for (int key : keys) {
+            tree.insertKey(key);
+        }
+
+        System.out.println("\nReverse Order:");
+        tree.printInReverseOrder(tree.getRoot());
+
+        System.out.println("\n\nTree Structure (2D):");
+        BSTPrint.print2D(tree.getRoot());
+
+        int searchKey1 = 27;
+        if (tree.contains(searchKey1)) {
+            System.out.println("\nKey " + searchKey1 + " found in the tree.");
+        } else {
+            System.out.println("\nKey " + searchKey1 + " not found in the tree.");
+        }
+
+        int searchKey2 = 89;
+        if (tree.contains(searchKey2)) {
+            System.out.println("Key " + searchKey2 + " found in the tree.");
+        } else {
+            System.out.println("Key " + searchKey2 + " not found in the tree.");
+        }
+    }
+}
